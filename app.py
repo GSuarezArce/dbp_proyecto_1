@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:1234@localhost:5432/dbp"
+app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:1234@192.168.1.18:5432/postgres"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -27,5 +27,5 @@ def index():
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)
-else:
+else: 
     print('using global variables from FLASK')
