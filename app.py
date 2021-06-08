@@ -17,9 +17,13 @@ class Usuario(db.Model):
     usuario=db.Column(db.String(70),nullable=True)
     contrasenia=db.Column(db.String(40),nullable=True)  
     email=db.Column(db.String(100),nullable=True)
-
-
-
+'''
+class Tarjeta(db.Model):
+    __tablename__ = 'tarjeta'
+    id = db.Column(db.Integer,primary_key =True)
+    n_tarjeta = db.Column(db.Integer,nullable=False)
+    id_usuario = db.Column(db.Integer,db.ForeignKey('Usuario.id'))
+'''
 db.create_all()
 
 
