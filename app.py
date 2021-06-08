@@ -9,8 +9,14 @@ app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:1234@192.168.1.18:5
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-class Usuario:
-    id= db.Column(db.integer,primary_key=True)
+class Usuario(db.Model):
+    id= db.Column(db.Integer,primary_key=True)
+    nombre=db.Column(db.String(50),nullable=True)
+    apellidos=db.Column(db.String(60),nullable=True)
+    usuario=db.Column(db.String(70),nullable=True)
+    contrasenia=db.Column(db.String(40),nullable=True)  
+    email=db.Column(db.string(100),nullable=True)
+
 
 
 db.create_all()
