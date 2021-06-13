@@ -37,6 +37,7 @@ class Usuario(db.Model):
     contrasenia=db.Column(db.String(40),nullable=False)  
     email=db.Column(db.String(100),nullable=False)
     fecha_de_nacimiento=db.Column(db.Date,nullable=False) 
+    dinero_en_cuenta=db.Column(db.Float,nullable=False)
     ult_inicio_sesion=db.Column(db.DateTime,nullable=False)    
     rol=db.Column(db.Integer,db.ForeignKey("rol.id_rol"),nullable=False)
     
@@ -47,13 +48,23 @@ class Usuario(db.Model):
 
 
 class Tarjeta(db.Model):
-    _tablename_ = 'tarjeta_de_credito'
+    __tablename__ = 'tarjeta_de_credito'
     id_tarjeta = db.Column(db.Integer,primary_key =True)
     n_tarjeta = db.Column(db.Integer,nullable=False)
     id_usuario = db.Column(db.Integer,db.ForeignKey('usuario.id_persona'),nullable=False)
     def __repr__(self):
-        return f'<Tarjeta: {self.id_tarjeta},{self.n_tarjeta},{self.id_usuario}'
+        return f'<Tarjeta: {self.id_tarjeta},{self.n_tarjeta},{self.id_usuario}>'
 
+class Solicitud(db.Model):
+    __tablename__="solicitudes"
+    id_solicitud=db.Column(db.Integer,primary_key=True)
+    description=db.Column(db.String(10000),nullable=False)
+    monto_solicitado=db.Column(db.Float,nullable=False)
+    id_persona=db.Column(db.Integer,db.ForeignKey('usuario.id_persona'),nullable=False)
+
+    def __repr__(self):
+        return f"<Solicitud: {self.id_solicitud}, {self.description}, {self.monto_solicitado},{self.id_persona}>"
+        
 
 class Equipos(db.Model):
     __tablename__="equipos"
