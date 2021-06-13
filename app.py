@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 #no se olviden de crear la base de datos en postgres proyecto1
 
-app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://grupo5:1234@localhost:5432/proyecto1"
+app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://grupo5:1234@localhost:5432/proyecto1"   
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -81,7 +81,7 @@ class Partidos(db.Model):
 class apuestas(db.Model):
     __tablename__="apuestas"
     id_apuesta=db.Column(db.Integer,primary_key=True)
-    id_partido=db.Column(db.Integer,db.ForeignKey("partidos.id_partido"))
+    id_partido=db.Column(db.Integer,db.ForeignKey("partidos.id_partido"),nullable=False)
     apuesta_a_equipo_A=db.Column(db.Boolean,nullable=False)
     apuesta_a_equipo_B=db.Column(db.Boolean,nullable=False)
     monto=db.Column(db.Integer,nullable=False)
