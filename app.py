@@ -107,7 +107,7 @@ class apuestas(db.Model):
 @app.route('/')
 def index():
     
-    return "a"
+    return render_template("inicio_sesion.html")
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)
