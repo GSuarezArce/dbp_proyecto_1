@@ -1,18 +1,36 @@
+from logging import error
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask.wrappers import Response
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, migrate
 import json
 
+
+
 app = Flask(__name__)
+
 #no se olviden de crear la base de datos en postgres proyecto1
 
-app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:1234@localhost:5432/proyecto1"
+app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://grupo5:1234@localhost:5432/proyecto1"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate= Migrate(app,db)
+
+
+class Rol(db.Model):
+    __tablename__="rol"
+    id_rol=db.Column(db.Integer,primary_key=True)
+    rol= db.Column(db.String(20),nullable=False)
+
+    def __repr__(self):
+        return f"<Rol: {self.id_rol}, {self.rol}>"
+        
+
 
 class Usuario(db.Model):
     __tablename__ = 'usuario'
-    id_persona= db.Column(db.Integer,primary_key=False)
+    id_persona= db.Column(db.Integer,primary_key=True)
     nombre=db.Column(db.String(50),nullable=False)
     apellidos=db.Column(db.String(60),nullable=False)
     usuario=db.Column(db.String(70),nullable=False)
@@ -20,7 +38,7 @@ class Usuario(db.Model):
     email=db.Column(db.String(100),nullable=False)
     fecha_de_nacimiento=db.Column(db.Date,nullable=False) 
     ult_inicio_sesion=db.Column(db.DateTime,nullable=False)    
-    rol=db.Column(db.Integer,db.ForeignKey("tipo_de_rol.id_rol"),nullable=False)
+    rol=db.Column(db.Integer,db.ForeignKey("rol.id_rol"),nullable=False)
     
     def __repr__(self):
         return f'<Usuario: {self.id_persona}, {self.nombre}, {self.apellidos}, {self.usuario},{self.contrasenia}, {self.email},{self.rol}>'
@@ -32,7 +50,7 @@ class Tarjeta(db.Model):
     _tablename_ = 'tarjeta_de_credito'
     id_tarjeta = db.Column(db.Integer,primary_key =True)
     n_tarjeta = db.Column(db.Integer,nullable=False)
-    id_usuario = db.Column(db.Integer,db.ForeignKey('usuario.id_persona'),nulable=False)
+    id_usuario = db.Column(db.Integer,db.ForeignKey('usuario.id_persona'),nullable=False)
     def __repr__(self):
         return f'<Tarjeta: {self.id_tarjeta},{self.n_tarjeta},{self.id_usuario}'
 
@@ -47,7 +65,7 @@ class Equipos(db.Model):
 
 
     def __repr__(self):
-        return f'<Todo: {self.id},{self.pais},{self.partidos_ganados}>'
+        return f'<Todo: {self.id_equipo},{self.pais},{self.n_derrotas},{self.n_victorias}>'
     
 class Partidos(db.Model):
     __tablename__="partidos"
@@ -57,7 +75,7 @@ class Partidos(db.Model):
       
 
     def __repr__(self):
-        return f'<Todo: {self.id},{self.multiplicador_equipo_a},{self.multiplicador_equipo_b},{self.pais_equipo_a},{self.pais_equipo_b},{self.dinero_apostado_equipo_a},{self.dinero_apostado_equipo_b}>'
+        return f'<Todo: {self.id_partido},{self.equipo_a},{self.equipo_b}>'
 
 
 class apuestas(db.Model):
@@ -67,9 +85,12 @@ class apuestas(db.Model):
     apuesta_a_equipo_A=db.Column(db.Boolean,nullable=False)
     apuesta_a_equipo_B=db.Column(db.Boolean,nullable=False)
     monto=db.Column(db.Integer,nullable=False)
-    id_usuario=db
+    id_usuario=db.Column(db.Integer,db.ForeignKey("usuario.id_persona"),nullable=False)
 
-db.create_all()
+    def __repr__(self):
+        return f'<Todo: {self.id_apuesta},{self.id_partido},{self.apuesta_a_equipo_A},{self.apuesta_a_equipo_B},{self.monto},{self.id_usuario}>'
+
+
 
 
 @app.route('/')
