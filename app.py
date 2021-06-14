@@ -4,6 +4,7 @@ from flask.wrappers import Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, migrate
 import json
+import datetime
 
 
 
@@ -103,11 +104,44 @@ class apuestas(db.Model):
 
 
 
+@app.route('/comprobar-credenciales',methods=['POST'])
+def comprobar_credenciales():
+    response={}
+    usuario=request.get_json()['usuario']
+    password=request.get_json()['password']
+    lista_usuarios=Usuario.query.all()
+    us=Usuario(id_persona=1,nombre="pepe",apellidos="nose",usuario="Ereiclo",contrasenia="1234",email="adjkf@tumama.com",fecha_de_nacimiento=datetime.date.today(),dinero_en_cuenta=1234,ult_inicio_sesion=datetime.datetime.now(),rol=1)
+
+    lista_usuarios.append(us)
+    for u in lista_usuarios:
+        if usuario==u.usuario and password==u.contrasenia:
+            response['resultado']="success"
+            response['username']=u.usuario
+            response['password']=u.contrasenia
+            
+        
+        elif usuario==u.usuario and password!=u.contrasenia:
+            response['resultado']="incorrect_password"
+        else:
+            response['resultado']="incorrect_username"
+        
+    
+        
+
+    return jsonify(response)
+    
+
+@app.route('/redirect',methods=['POST'])
+def prueba():
+    d =request.form
+    
+    
+    return render_template('prueba.html',data= {"usuario" : d["usuario"], "password": d["password"]})
 
 @app.route('/')
 def index():
     
-    return render_template("inicio_sesion.html")
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)

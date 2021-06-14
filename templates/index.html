@@ -1,0 +1,189 @@
+<html>
+    <head>
+        <title>BecTec</title>
+    
+
+    <style>
+
+        .hidden{
+            display: none;
+        }
+        .error{
+            width: fit-content;
+            margin-left: 20px;
+            color: red;
+
+        }
+        .login{
+            
+            
+            
+            
+            width: 200px;
+            
+            
+        }
+        li {
+            list-style: none;
+            clear: both;
+            margin: 10px;
+        }
+
+
+        .us_pass{
+            
+            float: right;
+            width: 100px;
+
+        }
+
+        .boton{
+            margin-left: 25px;
+            
+            
+        }
+
+    
+
+    </style>
+    </head>
+    <h3>Bienvenido a BecTec!</h3>
+    <body>
+        <form id="form" action="/redirect" method="POST">
+            <div class="login">
+                <li>
+                    <label for= "usuario" >Usuario: </label>
+                    <input type="text" id="usuario" name="usuario" class="us_pass">
+                    
+                </li>
+                
+            </div>
+
+            <div class="hidden" id= "error_usuario">Ingrese un usuario valido</div>
+                
+            
+            <div class="login">
+                <li><label for="password">Contraseña: </label>
+                <input type="password" id="password" name="password" class="us_pass"></li>
+            </div>
+                
+
+            <div class="hidden" id= "error_password">Contraseña incorrecta</div>
+            
+
+            <div class="login">
+                <li><input type="submit" id="btnsubmit" value="Login" class="boton">
+                    <button class="boton">Register</button>
+                </li>
+                
+
+            </div>
+
+
+        </form>
+
+
+        <script>
+            
+            document.getElementById("form").onsubmit= function(e){
+                
+                
+                e.preventDefault();
+
+                fetch('/comprobar-credenciales',{
+                    method: 'POST',
+
+                    body: JSON.stringify({
+                        'usuario': document.getElementById("usuario").value,
+                        'password': document.getElementById("password").value
+                    }),
+
+                    headers: {
+                        "Content-Type":"application/json"
+                    }
+
+                }).then(function(r){
+                    
+                    return r.json();
+                }).then(function(json){
+                    
+                    
+
+                    if(json['resultado']==="success"){
+                        document.getElementById("error_password").className="hidden"
+                        document.getElementById("error_usuario").className="hidden"
+
+                        document.getElementById("form").submit();
+                        
+                        /*
+                        const form = document.createElement('form');
+                        const input1= document.createElement("input");
+                        const input2= document.createElement("input");
+
+                        input1.type="text";
+                        input1.name="usuario";
+                        input1.value=document.getElementById("usuario").value;
+                        
+                        input2.type="text";
+                        input2.name="password";
+                        input2.value=document.getElementById("password").value;
+
+                        form.appendChild(input1);
+                        form.appendChild(input2);
+
+
+                        form.method = 'POST';
+
+                        form.action = "/redirect";
+
+                        
+
+
+                        document.appendChild(form);
+
+                        form.submit();
+
+                        document.removeChild(form);
+
+                        */
+
+                        
+
+
+                        
+                        
+                        
+
+                    } else if(json['resultado']==="incorrect_password"){
+                        
+                        document.getElementById("error_password").className="error"
+                        document.getElementById("error_usuario").className="hidden"
+                        
+
+                    }else if(json['resultado']==="incorrect_username"){
+                        
+                        document.getElementById("error_usuario").className="error"
+                        document.getElementById("error_password").className="hidden"
+                        
+
+
+                    }
+
+                })
+
+            }
+            console.log(document.getElementById("form").action)
+            function prueba(){
+                document.getElementById("error_usuario").className="error"
+                document.getElementById("error_password").className="error"
+                
+            }
+
+        </script>
+
+
+    </body>
+
+
+
+</html>
