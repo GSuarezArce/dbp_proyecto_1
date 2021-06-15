@@ -73,7 +73,7 @@
 
             <div class="login">
                 <li><input type="submit" id="btnsubmit" value="Login" class="boton">
-                    <button class="boton">Register</button>
+                    <button class="boton" id='register'>Register</button>
                 </li>
                 
 
@@ -84,7 +84,19 @@
 
 
         <script>
-            
+            document.getElementById('register').onclick= function(e){
+                e.preventDefault();
+                document.getElementById("error_password").className="hidden"
+                document.getElementById("error_usuario").className="hidden"
+
+                location.href="/register"
+
+
+
+            }
+
+
+
             document.getElementById("form").onsubmit= function(e){
                 
                 
@@ -107,7 +119,7 @@
                     return r.json();
                 }).then(function(json){
                     
-                    
+                    console.log(json)
 
                     if(json['resultado']==="success"){
                         document.getElementById("error_password").className="hidden"
@@ -155,13 +167,14 @@
                         
 
                     } else if(json['resultado']==="incorrect_password"){
-                        
-                        document.getElementById("error_password").className="error"
+                        document.getElementById("password").value=""
                         document.getElementById("error_usuario").className="hidden"
+                        document.getElementById("error_password").className="error"
                         
 
                     }else if(json['resultado']==="incorrect_username"){
-                        
+                        document.getElementById("password").value=""
+                        document.getElementById("usuario").value=""
                         document.getElementById("error_usuario").className="error"
                         document.getElementById("error_password").className="hidden"
                         

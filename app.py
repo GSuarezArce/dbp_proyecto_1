@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask.wrappers import Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, migrate
+import datetime
 import json
 import datetime
 
@@ -38,7 +39,7 @@ class Usuario(db.Model):
     contrasenia=db.Column(db.String(40),nullable=False)  
     email=db.Column(db.String(100),nullable=False)
     fecha_de_nacimiento=db.Column(db.Date,nullable=False) 
-    dinero_en_cuenta=db.Column(db.Float,nullable=False)
+    dinero_en_cuenta=db.Column(db.Float,nullable=False,default=0)
     ult_inicio_sesion=db.Column(db.DateTime,nullable=False)    
     rol=db.Column(db.Integer,db.ForeignKey("rol.id_rol"),nullable=False)
     
@@ -103,6 +104,14 @@ class apuestas(db.Model):
         return f'<Todo: {self.id_apuesta},{self.id_partido},{self.apuesta_a_equipo_A},{self.apuesta_a_equipo_B},{self.monto},{self.id_usuario}>'
 
 
+def comprobar_si_hay_digitos(password):
+    numeros_necesarios=[str(x) for x in range(0,10)]
+    for n in numeros_necesarios:
+        if n in password:
+            return True
+
+    return False
+
 
 @app.route('/comprobar-credenciales',methods=['POST'])
 def comprobar_credenciales():
@@ -137,6 +146,71 @@ def prueba():
     
     
     return render_template('prueba.html',data= {"usuario" : d["usuario"], "password": d["password"]})
+
+
+@app.route('/register-verify',methods=['POST'])
+def register_verify():
+    response={}
+    dicc_respuesta=request.get_json()
+    
+    
+    print(dicc_respuesta)
+
+    usuario=dicc_respuesta['usuario']
+    apellidos=dicc_respuesta['apellidos']
+
+    password=dicc_respuesta['password']
+    confirm_password=dicc_respuesta['confirm-password']
+    
+    longitud_necesaria=8
+    if(dicc_respuesta['fecha_nacimiento']==""):
+        response['resultado']="null_birthdate"
+        return response
+
+    fecha_nacimiento=datetime.date.fromisoformat(dicc_respuesta['fecha_nacimiento'])
+    fecha_actual=datetime.date.today()
+
+    print(fecha_nacimiento)
+    tabla_usuario=Usuario.query.all()
+    lista_usuarios=[]
+    lista_usuarios.append("Ereiclo")
+    
+    for i in tabla_usuario:
+        lista_usuarios.append(i.usuario)
+    print(tabla_usuario)
+    print(lista_usuarios)
+
+   
+    
+    if fecha_nacimiento.year > fecha_actual.year-18:
+        response['resultado']="invalid_birthdate"
+    elif fecha_nacimiento.month > fecha_actual.month and fecha_nacimiento.year==(fecha_actual.year-18):
+        response['resultado']="invalid_birthdate"
+    elif fecha_nacimiento.day > fecha_actual.day and fecha_nacimiento.month == fecha_actual.month and fecha_nacimiento.year==(fecha_actual.year-18):
+        response['resultado']="invalid_birthdate"
+
+    elif password!=confirm_password:
+        response['resultado']="different_password"
+    elif len(password)<8:
+        response['resultado']="password_invalid_length"
+    
+    elif not comprobar_si_hay_digitos(password):
+        response['resultado']="password_missing_digits"
+
+    elif usuario in lista_usuarios:
+        response['resultado']='username_already_exists'
+    
+    else:
+        response['resultado']="success"
+    
+
+    return jsonify(response)
+
+
+@app.route('/register')
+def register():
+
+    return render_template('register.html')
 
 @app.route('/')
 def index():
