@@ -5,35 +5,36 @@ Integrantes:
 -Juan Diego Laredo
 -Salvador Olivares
 -Gabriel
+
 Descripción del Proyecto:
 El proyecto consiste en una casa de apuestas relacionada a la Copa América que se disputa este año. Un usuario podrá registrarse y logearse para apostar a su equipo favorito, de acuerdo a su porcentaje de ganancia y dinero que invierta.
 
 Objetivos:
-    -Lograr que un usuario invierta dinero y se almacene en la base de datos.
+-Lograr que un usuario invierta dinero y se almacene en la base de datos.
 
 Misión:
-    -Lograr que las personas puedan apostar sin problemas en nuestra página web.
+-Lograr que las personas puedan apostar sin problemas en nuestra página web.
 Visión:
-    -Ser una página web auto-sostenible y funcional
+-Ser una página web auto-sostenible y funcional
 
 Información:
-    Back-end:
-        -Creación de la base de datos Proyecto1, con sus respectivas tablas a través de Class-db.Model.
-        -Creación de app-routes, donde:
-            Se redirecciona usando render template hacia un html.
-            Se redirecciona hacia otra página.
-            Se obtiene datos de JavaScript y se guardan datos en las tablas usando JSON.
-        -Templates (como back-end):
-            Son 4 en total:
-                Index:
-                Partidos:
-                    La página principal de la web. Aquí se crea la relación de partidos y la función en JavaScript que se ejecutará cuando el usuario quiera apostar por un equipo. 
-                Apuestas:
-                    La página accederá a los datos de las apuestas en las que el usuario haya invertido.
-                Información:
-                Depositar:
-    Front-end:
-        -Uso de funciones básicas del boostrap, tales como: Containers, Clase Row para tener un mejor manero de posicionamiento, tomando en consideración el orden. 
+Back-end:
+-Creación de la base de datos Proyecto1, con sus respectivas tablas a través de Class-db.Model.
+-Creación de app-routes, donde:
+Se redirecciona usando render template hacia un html.
+Se redirecciona hacia otra página.
+Se obtiene datos de JavaScript y se guardan datos en las tablas usando JSON.
+-Templates (como back-end):
+Son 4 en total:
+Index:
+Partidos:
+La página principal de la web. Aquí se crea la relación de partidos y la función en JavaScript que se ejecutará cuando el usuario quiera apostar por un equipo. 
+Apuestas:
+La página accederá a los datos de las apuestas en las que el usuario haya invertido.
+Información:
+Depositar:
+Front-end:
+-Uso de funciones básicas del boostrap, tales como: Containers, Clase Row para tener un mejor manero de posicionamiento, tomando en consideración el orden. 
         -Se usó una barra Nav para la navegación rápida en los 4 htmls.
         -Por último, se implementó un CSS Style para vizualisar de mejor forma los resultados de las consultas a la base de datos.
     Script: app.py 
