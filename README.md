@@ -41,23 +41,23 @@ Uso de funciones básicas del boostrap, tales como: Containers, Clase Row para t
 Se usó una barra Nav para la navegación rápida en los 4 htmls.
 Por último, se implementó un CSS Style para vizualisar de mejor forma los resultados de las consultas a la base de datos.
 
-- Script: app.py 
-- API:
-- Requests:
+# Script: app.py 
+# API:
+# Requests:
             Ingresar los datos para poder ingresar a la página web.
             Hacer click en un boton para realizar una apuesta por un equipo.
             Insertar una tarjeta para poder apostar.
             Ingresar el monto a apostar.
-- Respuestas:
+# Respuestas:
             Si se logea de manera eficiente, se le deja pasar a la página principal. Sino, salta un mensaje de error y se vuelve a intentar.
             Al hacer click en submit cuando se ingresa el dinero, se guarda en la base de datos.
             Respecto al menu, en cada opción se redirige a la pestaña correspondiente.
             
-- Host: LocalHost
-- Autenticación: 
+# Host: LocalHost
+# Autenticación: 
         Se usa la autenticación por password. Comprobamos que el usuario ingresado es el mismo que en la misma base de datos, además de comprueba que las contraseñas coinciden.
 
-- Manejo de Errores:
+# Manejo de Errores:
         Error 500: Cuando ocurrió este error, siempre revisabamos e inspecionabamos la consola en la página web.
         Error 400: Cuando no se ingresó datos correctamente a la base de datos, saltaba este error.
         Error 300:
