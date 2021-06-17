@@ -1,6 +1,6 @@
 # dbp_proyecto_1
-Nombre del Proyecto: Apuestas BETSEC
-Integrantes:
+## Nombre del Proyecto: Apuestas BETSEC
+### Integrantes:
 -Eric Bracamonte
 -Juan Diego Laredo
 -Salvador Olivares
