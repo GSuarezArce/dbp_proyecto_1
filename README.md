@@ -35,7 +35,7 @@ La página principal de la web. Aquí se crea la relación de partidos y la func
 La página accederá a los datos de las apuestas en las que el usuario haya invertido.
 - Información:
 - Depositar:
-- Front-end:
+# Front-end:
 Uso de funciones básicas del boostrap, tales como: Containers, Clase Row para tener un mejor manero de posicionamiento, tomando en consideración el orden. 
 
 Se usó una barra Nav para la navegación rápida en los 4 htmls.
