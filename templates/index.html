@@ -49,7 +49,7 @@
     </head>
     <h3>Bienvenido a BecTec!</h3>
     <body>
-        <form id="form" action="/redirect" method="POST">
+        <form id="form" action="/depositar" method="POST">
             <div class="login">
                 <li>
                     <label for= "usuario" >Usuario: </label>
@@ -124,7 +124,11 @@
                     if(json['resultado']==="success"){
                         document.getElementById("error_password").className="hidden"
                         document.getElementById("error_usuario").className="hidden"
-
+                        var id= document.createElement("input")
+                        id.className="hidden"
+                        id.name="id"
+                        id.value=json['id']
+                        document.getElementById("form").appendChild(id)
                         document.getElementById("form").submit();
                         
                         /*

@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <title>BecTec</title>
+        <title>BetsTec</title>
         <style>
             .boton{
             margin-left: 60px;
@@ -42,6 +42,12 @@
             }
             .hidden{
                 display: none;
+            }
+
+            .register_success{
+                color: green;
+
+
             }
         </style>
     </head>
@@ -119,7 +125,7 @@
             
             <div class="hidden" id= "error_date_1">Seleccione una fecha de nacimiento</div>
 
-            <div class="hidden" id= "error_date_2">Necesitas mayoría de edad para apostar en BecTec!</div>
+            <div class="hidden" id= "error_date_2">Necesitas mayoría de edad para apostar en BetsTec!</div>
             
             <div class="div-registro">
                 <input type="submit" id="btnsubmit" value="Registrarte" class="boton">
@@ -131,13 +137,16 @@
 
         </form>
 
-        
+        <div class="hidden" id= "success_register"></div>
         
         
 
     </body>
     
     <script>
+
+        
+
 
         document.getElementById("form").onsubmit=function(e){
             e.preventDefault();
@@ -226,6 +235,14 @@
                     document.getElementById("error_password_1").className="hidden"
 
 
+                }else if(json['resultado']==="success"){
+                    document.getElementById("success_register").className="register_success"
+                    document.getElementById("success_register").innerHTML='Registro exitoso, redirigiendo página...'                           
+                                    
+
+                    
+                    setTimeout('document.getElementById("form").submit()',500)
+                    
                 }
 
 

@@ -1,0 +1,26 @@
+@charset "utf-8";
+body{
+    background-color:#FFFFFF;
+	background-image:url(apst.jpg);
+}
+
+.boleta{margin-top:7px; background-color: #511112;color:#FFFFFF
+}
+.container{
+    width: 90%; 
+    background-color:rgba(145,188,188,0.55);;
+    overflow: hidden;
+    margin: 20px auto;
+    padding: 20px;
+    
+}
+
+.boleta {
+transition:all .9s ease; 
+width:82%;
+}
+.boleta:hover {
+transform:scale(1.0);
+
+transform:scale(1.30);
+}

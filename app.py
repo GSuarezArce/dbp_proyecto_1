@@ -41,7 +41,7 @@ class Usuario(db.Model):
     fecha_de_nacimiento=db.Column(db.Date,nullable=False) 
     dinero_en_cuenta=db.Column(db.Float,nullable=False,default=0)
     ult_inicio_sesion=db.Column(db.DateTime,nullable=False)    
-    rol=db.Column(db.Integer,db.ForeignKey("rol.id_rol"),nullable=False)
+    rol=db.Column(db.Integer,db.ForeignKey("rol.id_rol"),nullable=False,default="1")
     
     def __repr__(self):
         return f'<Usuario: {self.id_persona}, {self.nombre}, {self.apellidos}, {self.usuario},{self.contrasenia}, {self.email},{self.rol}>'
@@ -52,7 +52,9 @@ class Usuario(db.Model):
 class Tarjeta(db.Model):
     __tablename__ = 'tarjeta_de_credito'
     id_tarjeta = db.Column(db.Integer,primary_key =True)
-    n_tarjeta = db.Column(db.Integer,nullable=False)
+    n_tarjeta = db.Column(db.String(1000),nullable=False)
+    ccv= db.Column(db.Integer,nullable=False)
+    titular= db.Column(db.String(1000),nullable=False)
     id_usuario = db.Column(db.Integer,db.ForeignKey('usuario.id_persona'),nullable=False)
     def __repr__(self):
         return f'<Tarjeta: {self.id_tarjeta},{self.n_tarjeta},{self.id_usuario}>'
@@ -74,34 +76,36 @@ class Equipos(db.Model):
     pais=db.Column(db.String(50),nullable=False)
     n_victorias=db.Column(db.Integer,nullable=False) 
     n_derrotas= db.Column(db.Integer,nullable=False)
+    n_empates= db.Column(db.Integer,nullable=False)
+    
     
 
 
     def __repr__(self):
-        return f'<Todo: {self.id_equipo},{self.pais},{self.n_derrotas},{self.n_victorias}>'
+        return f'<Todo: {self.id_equipo},{self.pais},{self.n_derrotas},{self.n_victorias},{self.n_empates}>'
     
 class Partidos(db.Model):
     __tablename__="partidos"
     id_partido= db.Column(db.Integer,primary_key=True) 
     equipo_a=db.Column(db.Integer,db.ForeignKey("equipos.id_equipo"),nullable=False)
     equipo_b=db.Column(db.Integer,db.ForeignKey("equipos.id_equipo"),nullable=False)   
+    porcentaje_1=db.Column(db.Float,nullable=False) 
+    porcentaje_2=db.Column(db.Float,nullable=False) 
       
 
     def __repr__(self):
         return f'<Todo: {self.id_partido},{self.equipo_a},{self.equipo_b}>'
 
 
-class apuestas(db.Model):
+class Apuestas(db.Model):
     __tablename__="apuestas"
     id_apuesta=db.Column(db.Integer,primary_key=True)
-    id_partido=db.Column(db.Integer,db.ForeignKey("partidos.id_partido"),nullable=False)
-    apuesta_a_equipo_A=db.Column(db.Boolean,nullable=False)
-    apuesta_a_equipo_B=db.Column(db.Boolean,nullable=False)
-    monto=db.Column(db.Integer,nullable=False)
+    id_partido=db.Column(db.Integer,db.ForeignKey("partidos.id_partido"),nullable=False)    
+    monto=db.Column(db.Float,nullable=False)
     id_usuario=db.Column(db.Integer,db.ForeignKey("usuario.id_persona"),nullable=False)
 
     def __repr__(self):
-        return f'<Todo: {self.id_apuesta},{self.id_partido},{self.apuesta_a_equipo_A},{self.apuesta_a_equipo_B},{self.monto},{self.id_usuario}>'
+        return f'<Todo: {self.id_apuesta},{self.id_partido},{self.monto},{self.id_usuario}>'
 
 
 def comprobar_si_hay_digitos(password):
@@ -112,25 +116,40 @@ def comprobar_si_hay_digitos(password):
 
     return False
 
+def comprobar_si_solo_hay_numeros(cadena):
+    
+    for i in cadena:
+        if (i.lower()).isalpha() or i.lower() in 'áéíóúñ@!#%&/()=?¿|°¬´"¨+*}{"[]`^~,;.:-_¡' +"'":
+            return False
+    return True
+
 
 @app.route('/comprobar-credenciales',methods=['POST'])
 def comprobar_credenciales():
     response={}
+    
     usuario=request.get_json()['usuario']
     password=request.get_json()['password']
     lista_usuarios=Usuario.query.all()
-    us=Usuario(id_persona=1,nombre="pepe",apellidos="nose",usuario="Ereiclo",contrasenia="1234",email="adjkf@tumama.com",fecha_de_nacimiento=datetime.date.today(),dinero_en_cuenta=1234,ult_inicio_sesion=datetime.datetime.now(),rol=1)
-
-    lista_usuarios.append(us)
+    id=0
+    print(usuario)
+    
     for u in lista_usuarios:
+        print(u.usuario==usuario)
         if usuario==u.usuario and password==u.contrasenia:
             response['resultado']="success"
             response['username']=u.usuario
             response['password']=u.contrasenia
+            response['id']=u.id_persona
+            u.ult_inicio_sesion=datetime.datetime.now()
+            
+            db.session.commit()
+            break
             
         
         elif usuario==u.usuario and password!=u.contrasenia:
             response['resultado']="incorrect_password"
+            break
         else:
             response['resultado']="incorrect_username"
         
@@ -140,12 +159,51 @@ def comprobar_credenciales():
     return jsonify(response)
     
 
-@app.route('/redirect',methods=['POST'])
+
+@app.route('/depositar',methods=['POST'])
+def apuestas():
+    d =request.form    
+    print("Esto es depositar",d)
+    id=d['id']
+    
+    
+        
+        
+
+    tarjetas= db.session.query(Tarjeta).filter(Tarjeta.id_usuario == id).all()
+    nms=[]
+    for tarjeta in tarjetas:
+        nms.append(tarjeta.n_tarjeta)
+        
+    
+    leng=0
+    print(tarjetas)
+    if tarjetas!=None:
+        leng=len(tarjetas)
+        
+
+
+    
+    return render_template('depositar.html',d=d,leng=leng,nms=nms)
+
+@app.route("/todos/<card_id>/delete-card",methods=["DELETE"])
+def delete_todo_by_id(card_id):
+    
+    tarjetas= db.session.query(Tarjeta).filter(Tarjeta.id_usuario == card_id).all()
+    t= tarjetas[0]
+    db.session.delete(t)
+    db.session.commit()
+    return jsonify({"success": True})
+
+@app.route('/partidos',methods=['POST'])
 def prueba():
     d =request.form
+
+    print("Esto es partidos",d)
+
     
     
-    return render_template('prueba.html',data= {"usuario" : d["usuario"], "password": d["password"]})
+    return render_template('partidos.html',data2 = Equipos.query.all(),data = Partidos.query.all(),d=d)
 
 
 @app.route('/register-verify',methods=['POST'])
@@ -173,7 +231,7 @@ def register_verify():
     print(fecha_nacimiento)
     tabla_usuario=Usuario.query.all()
     lista_usuarios=[]
-    lista_usuarios.append("Ereiclo")
+    
     
     for i in tabla_usuario:
         lista_usuarios.append(i.usuario)
@@ -191,7 +249,7 @@ def register_verify():
 
     elif password!=confirm_password:
         response['resultado']="different_password"
-    elif len(password)<8:
+    elif len(password)<longitud_necesaria:
         response['resultado']="password_invalid_length"
     
     elif not comprobar_si_hay_digitos(password):
@@ -207,10 +265,107 @@ def register_verify():
     return jsonify(response)
 
 
+@app.route('/create-user',methods=['POST'])
+def create_user():
+    
+
+    diccionario=request.form
+    username= diccionario.get("username")
+    password= diccionario.get("password")
+    email= diccionario.get('email')
+    nombre= diccionario.get('nombre')
+    apellidos= diccionario.get('apellidos')
+    fecha=datetime.date.fromisoformat((diccionario.get('fecha')))
+    ult=datetime.datetime.now()
+
+    u=Usuario(nombre=nombre,apellidos=apellidos,usuario=username,contrasenia=password,email=email,fecha_de_nacimiento=fecha
+        ,ult_inicio_sesion=ult)
+    db.session.add(u)
+    db.session.commit()
+
+
+    print(diccionario)
+
+
+    return redirect(url_for("index"))
+
+@app.route('/comprobar-tarjeta',methods=['POST'])
+def comprobar_tarjeta():
+    respuesta={}
+    dicc_respuesta=request.get_json()
+    parte1=dicc_respuesta['parte1']
+    parte2=dicc_respuesta['parte2']
+    parte3=dicc_respuesta['parte3']
+    ccv=dicc_respuesta['ccv']
+    propietario=dicc_respuesta['titular']
+
+    if len(parte1) != 4 or len(parte2) != 4 or len(parte3)!=4 or not comprobar_si_solo_hay_numeros(parte1+parte2+parte3):
+        respuesta['resultado']="invalid_card_number"
+    elif len(ccv) != 3 or not comprobar_si_solo_hay_numeros(ccv):
+        respuesta['resultado']="invalid_ccv"
+    elif comprobar_si_hay_digitos(propietario) or '@' in propietario or '!' in propietario or '"' in propietario or '#' in propietario or '%' in propietario or '&' in propietario or '/' in propietario or '(' in propietario or ')' in propietario or '=' in propietario or '?' in propietario or '¿' in propietario or '|' in propietario or '°' in propietario or '¬' in propietario or '´' in propietario or '¨' in propietario or '+' in propietario or '*' in propietario or '{' in propietario or '}' in propietario or '[' in propietario or ']' in propietario or '`' in propietario or '^' in propietario or '~' in propietario or ',' in propietario or ';' in propietario or '.' in propietario or ':' in propietario or '-' in propietario or '_' in propietario or '¡' in propietario or propietario=="":
+        respuesta['resultado']="invalid_user"
+    else:
+        respuesta['resultado']="success"
+          
+
+
+
+    return jsonify(respuesta)
+
+
+    
+
+@app.route("/create_credit_card",methods=['POST'])
+def create_credit_card():
+    print("skdfñj")
+    dicc=request.get_json()
+    n_tarjeta= dicc['parte1']+dicc['parte2']+dicc['parte3']
+    ccv= int(dicc['ccv'])
+    titular=dicc['titular'].upper()
+    id=dicc['id']
+    t=Tarjeta(n_tarjeta=(n_tarjeta),ccv=ccv,titular=titular,id_usuario=id)
+    db.session.add(t)
+    db.session.commit()
+    print("hoal")
+
+    return jsonify({})
+
+@app.route('/monto',methods=['POST'])
+def montos():
+    porcentaje = request.get_json()['porcentaje']
+    monto = request.get_json()['monto']
+    id_partido = request.get_json()['id_partido']
+    monto_total = float(porcentaje) * float(monto)
+    apuesta = Apuestas(monto = monto_total,id_partido=id_partido, id_usuario = 1)
+    db.session.add(apuesta)
+    db.session.commit()
+    db.session.close()
+    return jsonify({})
+
+
+@app.route('/agregar_dinero',methods=['POST'])
+def agregar_dinero():
+
+    dicc=request.form
+    print(dicc)
+    dinero_agregado=dicc['dinero_agregado']
+    print(dinero_agregado)
+    u=Usuario.query.get(dicc['card'])
+
+    u.dinero_en_cuenta+= int(dinero_agregado)
+
+    db.session.commit()
+
+    return redirect(url_for('index'))
+
+
 @app.route('/register')
 def register():
 
     return render_template('register.html')
+
+
 
 @app.route('/')
 def index():
@@ -221,3 +376,8 @@ if __name__ == '__main__':
     app.run(port=5002, debug=True)
 else: 
     print('using global variables from FLASK')
+
+
+
+
+    

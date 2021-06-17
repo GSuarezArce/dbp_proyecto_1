@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for ('static',filename='css/bootstrap/css/bootstrap.css')}}">
+    <title>BetsTec</title>
+    <style>
+        .boton{
+            margin-top: 20px;
+            margin-left: 110px;
+            
+                    
+        
+        }
+        .boton-agregar{
+            width: 75px;
+            height: 30px;
+
+        }
+        .add{
+            width: 60px;
+            height: 25px;
+            
+            
+            margin-right: 120px;
+            font-size: small;
+            text-align: center;
+            float: right;
+        }
+        .botones{
+            float: right;
+            list-style-type: none;
+            width: 200px;
+        }
+        .propietario{
+            height: 22px;
+        }
+        
+        .ccv{
+            width: 40px;
+            height: 22px;
+            text-align: center;
+
+        }
+
+        .boton-cancelar{
+            border: none;
+            color: gray;
+            cursor: pointer;
+            margin-left: 20px;
+            
+            background-color: white;
+        }
+        .registro{
+            float: right;
+            width: 150px;
+
+        }
+        .radio{
+            list-style: none;
+            width: fit-content;
+            margin: 20px;
+
+        }
+
+        .formulario{
+            list-style: none;
+            clear: both;
+
+            margin: 20px;
+        }
+
+        .tarjeta{
+            width: 80px;
+            height: 22px;
+
+            text-align: center;
+            
+        }
+        
+        .div-agregar{
+            margin: 20px;
+            width: 400px;
+            height: 230px;
+            padding-bottom: 20px;
+            border-style: groove;
+        }
+        
+
+        .div-depositar{
+            width: 350px;
+        }
+        .hidden{
+            display: none;
+        }
+
+        .register_success{
+            color: green;
+
+
+        }
+        .depositar{
+            margin: 20px;
+            width: 400px;
+            
+            padding-bottom: 20px;
+            border-style: groove;
+        } 
+
+        .delete-button{
+                
+                border: none;
+
+                color: red;
+
+                float: right;
+               
+                cursor: pointer;
+
+                font-size: 15px;
+
+                background-color: white;
+
+
+            }
+    </style>
+
+
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">BetsTec</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+                
+        <li class="nav-item">
+          <a class="nav-link" href="./depositar.html" id="redirect-depositar">Depositar</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  
+  
+        <div class="depositar" id="deposit">
+        <form id="form" action="/agregar_dinero" method="POST">
+            {% if leng ==0 %}
+            <div class="div-depositar" id="caso-1">
+                <li class="formulario">
+                    <button class="boton" id="agregar_tarjeta">Agregar tarjeta</button>
+                
+                </li>                
+            </div>
+            {% else %}
+            <div>
+            
+            {%for n in nms%}
+            
+                <li class="radio">
+                <input type="radio" name="card" value="{{d['id']}}" checked>                
+                <label for="card">{{n}}</label>
+                <button data-id="{{d.id}}" class= "delete-button">&cross;</button>
+                </li>
+            
+            {%endfor%}
+
+                <label for="dinero_agregado">Pon una cantidad a agregar: </label>
+                <input type="text" id="monto" name="dinero_agregado">
+                <input type="submit" onclick="funcion()"  id="btnsubmit" name="btn">
+
+            </div>
+            
+        {%endif%}
+        </form>
+        
+        <div class="hidden" id= "success_register"></div>
+        
+        
+
+
+
+  <script>
+      
+
+      
+
+      
+
+      function funcion(){
+          document.getElementById("form")
+      }
+
+      const buttons= document.querySelectorAll(".delete-button");
+
+            for(let i=0;i<buttons.length;i++){
+
+                
+                const button= buttons[i];
+                console.log(button)
+
+                button.onclick= function(e){
+                    e.preventDefault()
+                    console.log(e);
+
+                    const id= "{{d['id']}}";
+
+                    fetch("/todos/"+id+"/delete-card",{
+
+                        method: "DELETE"
+
+                    }).then(function(r){
+
+                        console.log(r);
+
+                        return r.json()
+
+                    }).then(function(jsonresponse){
+
+                        if(jsonresponse["success"]){
+
+                            const button_remove= button.parentElement;
+
+                            button_remove.remove();
+
+                            redirect_depositar()
+
+                        }                   
+                    });
+
+
+                };
+                
+
+            };
+            document.getElementById("agregar_tarjeta").onclick=function(e){
+                e.preventDefault()
+                append_card()
+                
+
+            }
+      function append_card(){
+            
+            
+            document.getElementById("caso-1").className="hidden"
+            var form= document.getElementById("form")
+            
+            document.getElementById("deposit").removeChild(form)
+            var form= document.createElement("form")
+            form.action="/create_credit_card"
+
+        
+            var i1= document.createElement("input")
+            var i2= document.createElement("input")
+            var i3= document.createElement("input")
+            var i4= document.createElement("input")
+            var i5= document.createElement("input")
+
+            var li1= document.createElement("li")
+            var li2= document.createElement("li")
+            var li3= document.createElement("li")
+            
+            
+            var di1= document.createElement("div")
+            var di2= document.createElement("div")
+            var di3= document.createElement("div")
+
+
+            var lab1= document.createElement("label")
+            var lab2= document.createElement("label")
+            
+            var guion= document.createTextNode("-")
+            var guion2= document.createTextNode("-")
+            var text1= document.createTextNode("  CCV: ")
+            
+            var button_cancel=document.createElement("button")
+            var button_append=document.createElement("button")
+            
+            var br= document.createElement("br")
+            var br2= document.createElement("br")
+            form.action="/comprobar-tarjeta"
+
+            
+            
+
+            li1.className="formulario"    
+            li2.className="formulario" 
+            li3.className="botones" 
+
+            i1.type="text"
+            i1.name="parte1"
+            i1.id="parte1"
+            i1.className="tarjeta"
+
+            i2.type="text"
+            i2.name="parte2"
+            i2.id="parte2"
+            i2.className="tarjeta"
+
+            i3.type="text"
+            i3.name="parte3"
+            i3.id="parte3"
+            i3.className="tarjeta"
+            
+            
+            i4.type="text"
+            i4.name="ccv"
+            i4.id="ccv"
+            i4.className="ccv"
+
+            i5.type="text"
+            i5.name="propietario"
+            i5.id="propietario"
+            i5.className="propietario"
+
+            
+            lab1.innerHTML="Ingrese el número de su tarjeta:"
+            lab1.htmlFor="parte1"
+
+            lab2.innerHTML="Propietario de la tarjeta:"
+            lab2.htmlFor="propietario"
+            
+            button_cancel.className="boton-cancelar"
+            button_cancel.id="a_cancelar"
+            
+            button_cancel.onclick=function(e){
+                e.preventDefault()
+
+                redirect_depositar()
+            }
+            button_cancel.innerHTML="<u>Cancelar</u>"
+
+            button_append.className="boton-agregar"
+            button_append.innerHTML="Agregar"
+            button_append.onclick=function(e){
+                console.log(form)
+                e.preventDefault()
+                fetch('/comprobar-tarjeta',{
+                    method: 'POST',
+                    
+                    body: JSON.stringify({
+
+                        'parte1': document.getElementById("parte1").value,
+                        'parte2': document.getElementById("parte2").value,
+                        'parte3': document.getElementById("parte3").value,
+                        'ccv': document.getElementById("ccv").value,
+                        'titular':document.getElementById("propietario").value,
+
+                        
+                    }),
+                    headers:{
+                            "Content-Type": "application/json"
+
+                        }
+
+                }).then(function(r){
+                    return r.json()
+                }).then(function(json){
+                    console.log(json)
+
+                    if(json['resultado']==="invalid_card_number"){
+
+                    }else if(json['resultado']==="invalid_ccv"){
+
+                    }else if(json['resultado']==="invalid_user"){
+
+                    }else if(json['resultado']==="success"){
+                        fetch("/create_credit_card",{
+                    method: 'POST',
+                    
+                    body: JSON.stringify({
+
+                        'parte1': document.getElementById("parte1").value,
+                        'parte2': document.getElementById("parte2").value,
+                        'parte3': document.getElementById("parte3").value,
+                        'ccv': document.getElementById("ccv").value,
+                        'titular':document.getElementById("propietario").value,
+                        'id': "{{d['id']}}"
+
+                        
+                    }),
+                    headers:{
+                            "Content-Type": "application/json"
+
+                        }
+
+
+                    })
+                    redirect_depositar();
+                    
+
+
+                    }
+                })
+
+
+            }
+
+            
+
+            li1.appendChild(lab1)
+            li1.appendChild(br)
+            li1.appendChild(i1)
+            li1.appendChild(guion)
+            li1.appendChild(i2)
+            li1.appendChild(guion2)
+            li1.appendChild(i3)
+            li1.appendChild(text1)
+            li1.appendChild(i4)
+
+            li2.appendChild(lab2)
+            li2.appendChild(br2)
+            li2.appendChild(i5)
+
+            li3.appendChild(button_append)
+            li3.appendChild(button_cancel)
+
+            
+            di1.appendChild(li1)
+
+            di2.appendChild(li2)
+
+            di3.appendChild(li3)
+
+            form.appendChild(di1)
+            form.appendChild(di2)
+            form.appendChild(di3)
+            
+
+            document.getElementById("deposit").className="div-agregar"
+            document.getElementById("deposit").appendChild(form)
+
+            
+
+          
+          
+
+          
+      }
+      
+      
+
+     
+
+      function redirect_depositar(){
+          
+          
+            const form = document.createElement("form")
+            const i1= document.createElement("input")
+            const i2= document.createElement("input")
+            const i3= document.createElement("input")
+
+            form.className="hidden"
+            form.action="/depositar"
+            form.method="POST"
+
+            i1.type="text"
+            i1.name="usuario"
+            i1.value= "{{d['usuario']}}"
+                
+            i2.type="password"
+            i2.name="password"
+            i2.value= "{{d['password']}}"
+
+            i3.type="text"
+            i3.name="id"
+            i3.value= "{{d['id']}}"
+
+            form.appendChild(i1)
+            form.appendChild(i2)
+            form.appendChild(i3)
+
+            document.body.appendChild(form)
+            form.submit()
+            document.body.removeChild(form)
+
+      }
+
+      document.getElementById("redirect-depositar").onclick=function(e){
+          e.preventDefault()
+
+          redirect_depositar()
+
+          
+
+
+      }
+
+
+  </script>
+
+</body>
+</html>
