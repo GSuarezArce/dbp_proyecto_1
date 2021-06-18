@@ -25,9 +25,12 @@ Visión:
     Se redirecciona usando render template hacia un html.
     Se redirecciona hacia otra página.
     Se obtiene datos de JavaScript y se guardan datos en las tablas usando JSON.
-- Templates (como back-end):
-    Son 4 en total:
-- Index:
+## Templates (como back-end):
+
+Son 4 en total:
+- Index: 
+
+Pagina inicial de la web. Aquí se inicia sesión o se registra el usuario. 
 
 - Partidos:
 La página principal de la web. Aquí se crea la relación de partidos y la función en JavaScript que se ejecutará cuando el usuario quiera apostar por un equipo. 
