@@ -4,7 +4,7 @@
 - Eric Bracamonte
 - Juan Diego Laredo
 - Salvador Olivares
-- Gabriel
+- Gabriel Suarez
 
 # Descripción del Proyecto:
 
@@ -61,4 +61,4 @@ Por último, se implementó un CSS Style para vizualisar de mejor forma los resu
 # Manejo de Errores:
         Error 500: Cuando ocurrió este error, siempre revisabamos e inspecionabamos la consola en la página web.
         Error 400: Cuando no se ingresó datos correctamente a la base de datos, saltaba este error.
-        Error 300:
+        
