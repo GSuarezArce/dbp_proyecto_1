@@ -15,7 +15,8 @@ El proyecto consiste en una casa de apuestas relacionada a la Copa América que 
 
 # Misión:
 - Lograr que las personas puedan apostar sin problemas en nuestra página web.
-Visión:
+
+# Visión:
 - Ser una página web auto-sostenible y funcional
 
 # Información:
