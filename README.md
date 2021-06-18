@@ -4,7 +4,7 @@
 - Eric Bracamonte
 - Juan Diego Laredo
 - Salvador Olivares
-- Gabriel Suarez
+- Gabriel Suárez    
 
 # Descripción del Proyecto:
 
