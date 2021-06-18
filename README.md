@@ -28,16 +28,14 @@ Visión:
 ## Templates (como back-end):
 
 Son 4 en total:
-- Index: 
+- Index: Pagina inicial de la web. Aquí se inicia sesión o se registra el usuario. 
 
-Pagina inicial de la web. Aquí se inicia sesión o se registra el usuario. 
+- Partidos: La página principal de la web. Aquí se crea la relación de partidos y la función en JavaScript que se ejecutará cuando el usuario quiera apostar por un equipo. 
+- Apuestas: La página accederá a los datos de las apuestas en las que el usuario haya invertido.
 
-- Partidos:
-La página principal de la web. Aquí se crea la relación de partidos y la función en JavaScript que se ejecutará cuando el usuario quiera apostar por un equipo. 
-- Apuestas:
-La página accederá a los datos de las apuestas en las que el usuario haya invertido.
-- Información:
-- Depositar:
+- Depositar: Esta página permite tanto agregar una tarjeta de crédito como eliminar 
+
+
 # Front-end:
 Uso de funciones básicas del boostrap, tales como: Containers, Clase Row para tener un mejor manero de posicionamiento, tomando en consideración el orden. 
 
